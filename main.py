@@ -20,6 +20,11 @@ def save_image_from_url(url, save_path):
 
 if __name__ == "__main__":
     try:
-        hubble_image = save_image_from_url(IMAGE_URL, "hubble.jpeg")
+        Path("images").mkdir(exist_ok=True)
+    except PermissionError as err:
+        exit(err)
+
+    try:
+        hubble_image = save_image_from_url(IMAGE_URL, "images/hubble.jpeg")
     except requests.exceptions.HTTPError as err:
         exit(err)
