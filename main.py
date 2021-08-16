@@ -1,4 +1,7 @@
+import os
 from pathlib import Path
+from urllib.parse import urlparse
+
 import requests
 
 
@@ -35,6 +38,12 @@ def save_spacex_latest_launch_images(save_path):
         save_image_from_url(image_url, image_path)
         saved_images.append(image_path)
     return saved_images
+
+
+def get_file_ext_from_url(url):
+    path = urlparse(url).path
+    file_name = os.path.split(path)[-1]
+    return os.path.splitext(file_name)[-1]
 
 
 if __name__ == "__main__":
