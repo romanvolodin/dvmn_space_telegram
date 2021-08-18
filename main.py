@@ -3,9 +3,11 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
+from environs import Env
 
 
 IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
+NASA_API_URL = "https://api.nasa.gov/planetary/apod"
 
 
 def save_image_from_url(url, save_path):
@@ -40,6 +42,21 @@ def save_spacex_latest_launch_images(save_path):
     return saved_images
 
 
+def fetch_random_nasa_apod_images(api_key, count=10):
+    params = {
+        "api_key": api_key,
+        "count": count,
+    }
+    image_urls = []
+    while len(image_urls) < count:
+        response = requests.get(NASA_API_URL, params=params)
+        response.raise_for_status()
+        for apod in response.json():
+            if apod["media_type"] == "image":
+                image_urls.append(apod["url"])
+    return image_urls[:count]
+
+
 def get_file_ext_from_url(url):
     path = urlparse(url).path
     file_name = os.path.split(path)[-1]
@@ -47,9 +64,15 @@ def get_file_ext_from_url(url):
 
 
 if __name__ == "__main__":
+    env = Env()
+    env.read_env()
+
+    nasa_api_key = env.str("NASA_API_KEY")
+
     try:
         Path("images").mkdir(exist_ok=True)
     except PermissionError as err:
         exit(err)
 
     save_spacex_latest_launch_images("images")
+    print(fetch_random_nasa_apod_images(nasa_api_key))
