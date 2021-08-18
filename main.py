@@ -68,9 +68,9 @@ if __name__ == "__main__":
     nasa_api_key = env.str("NASA_API_KEY")
 
     try:
-        Path("images").mkdir(exist_ok=True)
+        Path("images/nasa/apod").mkdir(parents=True, exist_ok=True)
     except PermissionError as err:
         exit(err)
 
     nasa_apod_image_urls = fetch_random_nasa_apod_images(nasa_api_key)
-    save_images(nasa_apod_image_urls, "images")
+    save_images(nasa_apod_image_urls, "images/nasa/apod")
