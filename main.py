@@ -30,13 +30,11 @@ def fetch_spacex_latest_launch_images():
     return response.json()["links"]["flickr"]["original"]
 
 
-def save_spacex_latest_launch_images(save_path):
+def save_images(image_urls, save_path):
     saved_images = []
-    image_urls = fetch_spacex_latest_launch_images()
-    if not image_urls:
-        return
     for index, image_url in enumerate(image_urls):
-        image_path = f"{save_path}/{index}.jpg"
+        ext = get_file_ext_from_url(image_url)
+        image_path = f"{save_path}/{index}{ext}"
         save_image_from_url(image_url, image_path)
         saved_images.append(image_path)
     return saved_images
@@ -74,5 +72,5 @@ if __name__ == "__main__":
     except PermissionError as err:
         exit(err)
 
-    save_spacex_latest_launch_images("images")
-    print(fetch_random_nasa_apod_images(nasa_api_key))
+    nasa_apod_image_urls = fetch_random_nasa_apod_images(nasa_api_key)
+    save_images(nasa_apod_image_urls, "images")
