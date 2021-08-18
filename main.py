@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -8,6 +9,7 @@ from environs import Env
 
 IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
 NASA_API_URL = "https://api.nasa.gov/planetary/apod"
+NASA_EPIC_URL = "https://api.nasa.gov/EPIC/api/natural/images"
 
 
 def save_image_from_url(url, save_path):
@@ -53,6 +55,23 @@ def fetch_random_nasa_apod_images(api_key, count=10):
             if apod["media_type"] == "image":
                 image_urls.append(apod["url"])
     return image_urls[:count]
+
+
+def fetch_nasa_epic_images(api_key):
+    params = {
+        "api_key": api_key,
+    }
+    image_urls = []
+    response = requests.get(NASA_EPIC_URL, params=params)
+    response.raise_for_status()
+    for image_metadata in response.json():
+        image_name = image_metadata["image"]
+        image_datetime = datetime.fromisoformat(image_metadata["date"])
+        image_date = image_datetime.strftime("%Y/%m/%d")
+        image_urls.append(
+            f"https://api.nasa.gov/EPIC/archive/natural/{image_date}/png/{image_name}.png?api_key={api_key}"
+        )
+    return image_urls
 
 
 def get_file_ext_from_url(url):
