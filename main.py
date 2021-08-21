@@ -7,27 +7,15 @@ import requests
 from environs import Env
 
 
-IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
-NASA_API_URL = "https://api.nasa.gov/planetary/apod"
-NASA_EPIC_URL = "https://api.nasa.gov/EPIC/api/natural/images"
-
-
 def save_image_from_url(url, save_path):
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) "
-            "Gecko/20100101 Firefox/88.0"
-        )
-    }
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     response.raise_for_status()
     with open(save_path, "wb") as image:
         image.write(response.content)
 
 
 def fetch_spacex_latest_launch_images():
-    SPACEX_API_URL = "https://api.spacexdata.com/v4/launches/latest"
-    response = requests.get(SPACEX_API_URL)
+    response = requests.get("https://api.spacexdata.com/v4/launches/latest")
     response.raise_for_status()
     return response.json()["links"]["flickr"]["original"]
 
@@ -42,14 +30,13 @@ def save_images(image_urls, save_path):
     return saved_images
 
 
-def fetch_random_nasa_apod_images(api_key, count=10):
-    params = {
-        "api_key": api_key,
-        "count": count,
-    }
+def fetch_random_NASA_APOD_images(api_key, count=10):
     image_urls = []
     while len(image_urls) < count:
-        response = requests.get(NASA_API_URL, params=params)
+        response = requests.get(
+            "https://api.nasa.gov/planetary/apod",
+            params={"api_key": api_key, "count": count},
+        )
         response.raise_for_status()
         for apod in response.json():
             if apod["media_type"] == "image":
@@ -57,19 +44,20 @@ def fetch_random_nasa_apod_images(api_key, count=10):
     return image_urls[:count]
 
 
-def fetch_nasa_epic_images(api_key):
-    params = {
-        "api_key": api_key,
-    }
+def fetch_NASA_EPIC_images(api_key):
     image_urls = []
-    response = requests.get(NASA_EPIC_URL, params=params)
+    response = requests.get(
+        "https://api.nasa.gov/EPIC/api/natural/images",
+        params={"api_key": api_key},
+    )
     response.raise_for_status()
     for image_metadata in response.json():
         image_name = image_metadata["image"]
         image_datetime = datetime.fromisoformat(image_metadata["date"])
         image_date = image_datetime.strftime("%Y/%m/%d")
         image_urls.append(
-            f"https://api.nasa.gov/EPIC/archive/natural/{image_date}/png/{image_name}.png?api_key={api_key}"
+            (f"https://api.nasa.gov/EPIC/archive/natural/{image_date}"
+            f"/png/{image_name}.png?api_key={api_key}")
         )
     return image_urls
 
@@ -91,5 +79,5 @@ if __name__ == "__main__":
     except PermissionError as err:
         exit(err)
 
-    nasa_apod_image_urls = fetch_random_nasa_apod_images(nasa_api_key)
+    nasa_apod_image_urls = fetch_random_NASA_APOD_images(nasa_api_key)
     save_images(nasa_apod_image_urls, "images/nasa/apod")
