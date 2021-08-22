@@ -74,10 +74,23 @@ if __name__ == "__main__":
 
     nasa_api_key = env.str("NASA_API_KEY")
 
+    nasa_apod_image_path = "images/nasa/apod"
+    nasa_epic_image_path = "images/epic/apod"
+    spacex_image_path = "images/spacex"
+
     try:
-        Path("images/nasa/apod").mkdir(parents=True, exist_ok=True)
+        Path(nasa_apod_image_path).mkdir(parents=True, exist_ok=True)
+        Path(nasa_epic_image_path).mkdir(parents=True, exist_ok=True)
+        Path(spacex_image_path).mkdir(parents=True, exist_ok=True)
     except PermissionError as err:
         exit(err)
 
-    nasa_apod_image_urls = fetch_random_NASA_APOD_images(nasa_api_key)
-    save_images(nasa_apod_image_urls, "images/nasa/apod")
+    try:
+        nasa_apod_image_urls = fetch_random_NASA_APOD_images(nasa_api_key)
+        nasa_epic_image_urls = fetch_NASA_EPIC_images(nasa_api_key)
+        spacex_image_urls = fetch_spacex_latest_launch_images()
+    except requests.exceptions.HTTPError as err:
+        exit(err)
+    save_images(nasa_apod_image_urls, nasa_apod_image_path)
+    save_images(nasa_epic_image_urls, nasa_epic_image_path)
+    save_images(spacex_image_urls, spacex_image_path)
