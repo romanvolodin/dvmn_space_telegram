@@ -1,9 +1,13 @@
 import os
+import time
 from datetime import datetime
+from glob import glob
 from pathlib import Path
+from random import choice
 from urllib.parse import urlparse
 
 import requests
+import telegram
 from environs import Env
 
 
@@ -73,6 +77,8 @@ if __name__ == "__main__":
     env.read_env()
 
     nasa_api_key = env.str("NASA_API_KEY")
+    tg_bot_token = env.str("TG_BOT_TOKEN")
+    tg_channel_id = env.int("TG_CHANNEL_ID")
 
     nasa_apod_image_path = "images/nasa/apod"
     nasa_epic_image_path = "images/nasa/epic"
@@ -94,3 +100,13 @@ if __name__ == "__main__":
     save_images(nasa_apod_image_urls, nasa_apod_image_path, "apod")
     save_images(nasa_epic_image_urls, nasa_epic_image_path, "epic")
     save_images(spacex_image_urls, spacex_image_path, "spacex")
+
+    bot = telegram.Bot(token=tg_bot_token)
+
+    image_dir = "images"
+    image_paths = glob(f"{image_dir}/**/**.*", recursive=True)
+    while True:
+        image_path = choice(image_paths)
+        with open(image_path, "rb") as image:
+            bot.send_photo(chat_id=tg_channel_id, photo=image)
+        time.sleep(5)
