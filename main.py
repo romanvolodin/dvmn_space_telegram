@@ -24,7 +24,7 @@ def save_images(image_urls, save_path):
     saved_images = []
     for index, image_url in enumerate(image_urls):
         ext = get_file_ext_from_url(image_url)
-        image_path = f"{save_path}/{index}{ext}"
+        image_path = f"{save_path}/{index:03d}{ext}"
         save_image_from_url(image_url, image_path)
         saved_images.append(image_path)
     return saved_images
