@@ -75,7 +75,7 @@ if __name__ == "__main__":
     nasa_api_key = env.str("NASA_API_KEY")
 
     nasa_apod_image_path = "images/nasa/apod"
-    nasa_epic_image_path = "images/epic/apod"
+    nasa_epic_image_path = "images/nasa/epic"
     spacex_image_path = "images/spacex"
 
     try:
