@@ -20,11 +20,11 @@ def fetch_spacex_latest_launch_images():
     return response.json()["links"]["flickr"]["original"]
 
 
-def save_images(image_urls, save_path):
+def save_images(image_urls, save_path, filename):
     saved_images = []
     for index, image_url in enumerate(image_urls):
         ext = get_file_ext_from_url(image_url)
-        image_path = f"{save_path}/{index:03d}{ext}"
+        image_path = f"{save_path}/{filename}_{index:03d}{ext}"
         save_image_from_url(image_url, image_path)
         saved_images.append(image_path)
     return saved_images
@@ -91,6 +91,6 @@ if __name__ == "__main__":
         spacex_image_urls = fetch_spacex_latest_launch_images()
     except requests.exceptions.HTTPError as err:
         exit(err)
-    save_images(nasa_apod_image_urls, nasa_apod_image_path)
-    save_images(nasa_epic_image_urls, nasa_epic_image_path)
-    save_images(spacex_image_urls, spacex_image_path)
+    save_images(nasa_apod_image_urls, nasa_apod_image_path, "apod")
+    save_images(nasa_epic_image_urls, nasa_epic_image_path, "epic")
+    save_images(spacex_image_urls, spacex_image_path, "spacex")
