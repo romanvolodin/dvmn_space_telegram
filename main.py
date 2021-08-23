@@ -4,7 +4,7 @@ import time
 
 from glob import glob
 from random import choice
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlsplit
 
 import requests
 import telegram
@@ -39,9 +39,8 @@ def save_images(image_urls, save_path, filename):
 
 
 def get_file_ext_from_url(url):
-    path = urlparse(url).path
-    file_name = os.path.split(path)[-1]
-    return os.path.splitext(file_name)[-1]
+    path = unquote(urlsplit(url).path)
+    return os.path.splitext(path)[-1]
 
 
 if __name__ == "__main__":
