@@ -2,7 +2,7 @@ from pathlib import Path
 
 import requests
 
-from main import parse_arguments, save_images
+from image_download import parse_arguments, save_images
 
 
 def fetch_spacex_latest_launch_images():
