@@ -27,6 +27,4 @@ if __name__ == "__main__":
     except requests.exceptions.HTTPError as err:
         exit(err)
 
-    saved_images = save_images(spacex_image_urls, image_dir, "spacex")
-    if saved_images:
-        print(len(saved_images), "image(s) saved.")
+    save_images(spacex_image_urls, image_dir, "spacex")

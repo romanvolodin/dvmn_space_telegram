@@ -60,14 +60,5 @@ if __name__ == "__main__":
     except requests.exceptions.HTTPError as err:
         exit(err)
 
-    saved_apod_images = save_images(
-        nasa_apod_image_urls, image_dir, "nasa_apod"
-    )
-    if saved_apod_images:
-        print(len(saved_apod_images), "APOD image(s) saved.")
-    
-    saved_epic_images = save_images(
-        nasa_epic_image_urls, image_dir, "nasa_epic"
-    )
-    if saved_epic_images:
-        print(len(saved_epic_images), "EPIC image(s) saved.")
+    save_images(nasa_apod_image_urls, image_dir, "nasa_apod")
+    save_images(nasa_epic_image_urls, image_dir, "nasa_epic")
