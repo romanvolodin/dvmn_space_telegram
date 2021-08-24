@@ -34,7 +34,7 @@ def fetch_nasa_epic_image_urls(api_key):
         image_date = image_datetime.strftime("%Y/%m/%d")
         image_urls.append(
             f"https://api.nasa.gov/EPIC/archive/natural/{image_date}"
-            f"/png/{image_name}.png?api_key={api_key}"
+            f"/png/{image_name}.png"
         )
     return image_urls
 
@@ -61,4 +61,6 @@ if __name__ == "__main__":
         exit(err)
 
     save_images(nasa_apod_image_urls, image_dir, "nasa_apod")
-    save_images(nasa_epic_image_urls, image_dir, "nasa_epic")
+    save_images(
+        nasa_epic_image_urls, image_dir, "nasa_epic", {"api_key": nasa_api_key}
+    )
