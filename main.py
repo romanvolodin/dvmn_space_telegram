@@ -31,14 +31,14 @@ def save_image_from_url(url, save_path):
 def save_images(image_urls, save_path, filename):
     saved_images = []
     for index, image_url in enumerate(image_urls):
-        ext = get_file_ext_from_url(image_url)
+        ext = split_url_file_ext(image_url)
         image_path = f"{save_path}/{filename}_{index:03d}{ext}"
         save_image_from_url(image_url, image_path)
         saved_images.append(image_path)
     return saved_images
 
 
-def get_file_ext_from_url(url):
+def split_url_file_ext(url):
     path = unquote(urlsplit(url).path)
     return os.path.splitext(path)[-1]
 
