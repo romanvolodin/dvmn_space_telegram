@@ -33,8 +33,8 @@ def fetch_nasa_epic_image_urls(api_key):
         image_datetime = datetime.fromisoformat(image_metadata["date"])
         image_date = image_datetime.strftime("%Y/%m/%d")
         image_urls.append(
-            (f"https://api.nasa.gov/EPIC/archive/natural/{image_date}"
-            f"/png/{image_name}.png?api_key={api_key}")
+            f"https://api.nasa.gov/EPIC/archive/natural/{image_date}"
+            f"/png/{image_name}.png?api_key={api_key}"
         )
     return image_urls
 
