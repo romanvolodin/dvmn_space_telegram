@@ -7,7 +7,7 @@ from environs import Env
 from image_download import parse_arguments, save_images
 
 
-def fetch_random_NASA_APOD_images(api_key, count=10):
+def fetch_random_NASA_APOD_image_urls(api_key, count=10):
     image_urls = []
     while len(image_urls) < count:
         response = requests.get(
@@ -21,7 +21,7 @@ def fetch_random_NASA_APOD_images(api_key, count=10):
     return image_urls[:count]
 
 
-def fetch_NASA_EPIC_images(api_key):
+def fetch_NASA_EPIC_image_urls(api_key):
     image_urls = []
     response = requests.get(
         "https://api.nasa.gov/EPIC/api/natural/images",
@@ -55,8 +55,8 @@ if __name__ == "__main__":
         exit(err)
     
     try:
-        nasa_apod_image_urls = fetch_random_NASA_APOD_images(nasa_api_key)
-        nasa_epic_image_urls = fetch_NASA_EPIC_images(nasa_api_key)
+        nasa_apod_image_urls = fetch_random_NASA_APOD_image_urls(nasa_api_key)
+        nasa_epic_image_urls = fetch_NASA_EPIC_image_urls(nasa_api_key)
     except requests.exceptions.HTTPError as err:
         exit(err)
 

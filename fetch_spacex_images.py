@@ -5,7 +5,7 @@ import requests
 from image_download import parse_arguments, save_images
 
 
-def fetch_spacex_latest_launch_images():
+def fetch_spacex_latest_launch_image_urls():
     response = requests.get("https://api.spacexdata.com/v4/launches/latest")
     response.raise_for_status()
     return response.json()["links"]["flickr"]["original"]
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         exit(err)
     
     try:
-        spacex_image_urls = fetch_spacex_latest_launch_images()
+        spacex_image_urls = fetch_spacex_latest_launch_image_urls()
     except requests.exceptions.HTTPError as err:
         exit(err)
 
