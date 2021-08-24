@@ -1,11 +1,10 @@
 import os
-import time
 from glob import glob
-from random import choice
 
-import telegram
+
 from environs import Env
 
+from bot import send_images_to_telegram
 from image_download import parse_arguments
 
 
@@ -29,9 +28,6 @@ if __name__ == "__main__":
     if not image_paths:
         exit(f"Can't find any images in {image_dir} dir")
 
-    bot = telegram.Bot(token=tg_bot_token)
-    while True:
-        image_path = choice(image_paths)
-        with open(image_path, "rb") as image:
-            bot.send_photo(chat_id=tg_channel_id, photo=image)
-        time.sleep(posting_interval)
+    send_images_to_telegram(
+        tg_bot_token, tg_channel_id, image_paths, posting_interval
+    )
